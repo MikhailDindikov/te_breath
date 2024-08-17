@@ -245,14 +245,14 @@ class _TeBloomingScreenState extends State<TeBloomingScreen> {
                           ),
                         ),
                       ],
-                    ),
-                  if (teBlooming.teState == TeState.loading)
+                    )
+                  else if (teBlooming.teState == TeState.loading)
                     Expanded(
                       child: Center(
                         child: CupertinoActivityIndicator(),
                       ),
-                    ),
-                  if (teBlooming.teState == TeState.done)
+                    )
+                  else if (teBlooming.teState == TeState.done)
                     Container(
                       width: double.infinity,
                       padding: EdgeInsets.all(16).copyWith(bottom: 47),
