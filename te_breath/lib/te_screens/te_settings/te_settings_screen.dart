@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:te_breath/te_models/te_allergy_model.dart';
+import 'package:te_breath/te_screens/te_allergy_screen/te_allergy_card.dart';
 import 'package:te_breath/te_screens/te_settings/te_settings_card.dart';
 import 'package:te_breath/te_screens/te_system/te_system_screen.dart';
 import 'package:te_breath/te_values/te_colors.dart';
@@ -42,100 +44,122 @@ class _TeSettingsScreenState extends State<TeSettingsScreen> {
           style: TeText.navbar.copyWith(color: TeColors.black),
         ),
       ),
-      body: Column(
-        children: [
-          SizedBox(
-            height: 30,
-          ),
-          TeSettingsCard(
-            teLabel: 'Privacy Policy',
-            onTeSetCardTap: () {
-              Get.to(() => TeSystemScreen(tecontrollerWT: 'Privacy Policy'));
-            },
-          ),
-          TeSettingsCard(
-            teLabel: 'Terms of Use',
-            onTeSetCardTap: () {
-              Get.to(() => TeSystemScreen(tecontrollerWT: 'Terms of Use'));
-            },
-          ),
-          TeSettingsCard(
-            teLabel: 'Support',
-            onTeSetCardTap: () {
-              Get.to(() => TeSystemScreen(tecontrollerWT: 'Support'));
-            },
-          ),
-          Container(
-            margin: EdgeInsets.symmetric(horizontal: 16, vertical: 17)
-                .copyWith(top: 0),
-            child: GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () async {
-                if (!_tePurLo.value) {
-                  _tePurLo.value = true;
-                  final ApphudComposite terestPud =
-                      await Apphud.restorePurchases();
-
-                  bool tefailPu = true;
-
-                  if (terestPud.purchases.isNotEmpty) {
-                    for (final pu in terestPud.purchases) {
-                      if (pu.productId == 'premium') {
-                        tefailPu = false;
-                        final teBox = GetStorage();
-                        teBox.write('hasTePrem', true);
-
-                        break;
+      body: SafeArea(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Column(
+              children: [
+                SizedBox(
+                  height: 30,
+                ),
+                TeSettingsCard(
+                  teLabel: 'Privacy Policy',
+                  onTeSetCardTap: () {
+                    Get.to(
+                        () => TeSystemScreen(tecontrollerWT: 'Privacy Policy'));
+                  },
+                ),
+                TeSettingsCard(
+                  teLabel: 'Terms of Use',
+                  onTeSetCardTap: () {
+                    Get.to(() => TeSystemScreen(tecontrollerWT: 'Terms of Use'));
+                  },
+                ),
+                TeSettingsCard(
+                  teLabel: 'Support',
+                  onTeSetCardTap: () {
+                    Get.to(() => TeSystemScreen(tecontrollerWT: 'Support'));
+                  },
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 16, vertical: 17)
+                      .copyWith(top: 0),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () async {
+                      if (!_tePurLo.value) {
+                        _tePurLo.value = true;
+                        final ApphudComposite terestPud =
+                            await Apphud.restorePurchases();
+        
+                        bool tefailPu = true;
+        
+                        if (terestPud.purchases.isNotEmpty) {
+                          for (final pu in terestPud.purchases) {
+                            if (pu.productId == 'premium') {
+                              tefailPu = false;
+                              final teBox = GetStorage();
+                              teBox.write('hasTePrem', true);
+        
+                              break;
+                            }
+                          }
+                        }
+        
+                        if (tefailPu) {
+                          Get.showSnackbar(GetSnackBar(
+                            duration: Duration(milliseconds: 3000),
+                            backgroundColor: TeColors.purple,
+                            messageText: Text(
+                              'Your purchase is not found!',
+                              style:
+                                  TeText.header5.copyWith(color: TeColors.white),
+                            ),
+                          ));
+                        } else {
+                          Get.showSnackbar(GetSnackBar(
+                            duration: Duration(milliseconds: 3000),
+                            backgroundColor: TeColors.purple,
+                            messageText: Text(
+                              'Premium has been activated!',
+                              style:
+                                  TeText.header5.copyWith(color: TeColors.white),
+                            ),
+                          ));
+                        }
+        
+                        _tePurLo.value = false;
                       }
-                    }
-                  }
-
-                  if (tefailPu) {
-                    Get.showSnackbar(GetSnackBar(
-                      duration: Duration(milliseconds: 3000),
-                      backgroundColor: TeColors.purple,
-                      messageText: Text(
-                        'Your purchase is not found!',
-                        style: TeText.header5.copyWith(color: TeColors.white),
-                      ),
-                    ));
-                  } else {
-                    Get.showSnackbar(GetSnackBar(
-                      duration: Duration(milliseconds: 3000),
-                      backgroundColor: TeColors.purple,
-                      messageText: Text(
-                        'Premium has been activated!',
-                        style: TeText.header5.copyWith(color: TeColors.white),
-                      ),
-                    ));
-                  }
-
-                  _tePurLo.value = false;
-                }
-              },
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Obx(
-                    () => _tePurLo.value
-                        ? CupertinoActivityIndicator()
-                        : Text(
-                            'Restore Purchases',
-                            style:
-                                TeText.header5.copyWith(color: TeColors.black),
-                          ),
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Obx(
+                          () => _tePurLo.value
+                              ? CupertinoActivityIndicator()
+                              : Text(
+                                  'Restore Purchases',
+                                  style: TeText.header5
+                                      .copyWith(color: TeColors.black),
+                                ),
+                        ),
+                        Container(
+                            height: 32,
+                            width: 32,
+                            alignment: Alignment.center,
+                            child: SvgPicture.asset('te_assets/icons/next.svg')),
+                      ],
+                    ),
                   ),
-                  Container(
-                      height: 32,
-                      width: 32,
-                      alignment: Alignment.center,
-                      child: SvgPicture.asset('te_assets/icons/next.svg')),
-                ],
-              ),
+                ),
+              ],
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16).copyWith(bottom: 16),
+              child: TeAllergyCard(
+                teAllergyModel: TeAllergyModel(
+                  teTitle: 'WARNING!',
+                  teColor: TeColors.yellow,
+                  teLabel:
+                      'In addition to the above information, we strongly advise you to consult a doctor. This application is not medical, but only helps to control and keep track of your allergies.',
+                  teSubLabel: '',
+                ),
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -13,6 +13,13 @@ class TeAllergyScreen extends StatelessWidget {
 
   static const _teAllergyModels = [
     TeAllergyModel(
+      teTitle: 'WARNING!',
+      teColor: TeColors.yellow,
+      teLabel:
+          'In addition to the above information, we strongly advise you to consult a doctor. This application is not medical, but only helps to control and keep track of your allergies.',
+      teSubLabel: '',
+    ),
+    TeAllergyModel(
       teTitle: '1. Allergen Identification',
       teColor: TeColors.yellow,
       teLabel:
