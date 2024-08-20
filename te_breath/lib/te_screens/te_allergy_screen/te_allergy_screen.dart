@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -7,6 +8,7 @@ import 'package:te_breath/te_screens/te_allergy_screen/te_allergy_card.dart';
 import 'package:te_breath/te_screens/te_settings/te_settings_screen.dart';
 import 'package:te_breath/te_values/te_colors.dart';
 import 'package:te_breath/te_values/te_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TeAllergyScreen extends StatelessWidget {
   const TeAllergyScreen({super.key});
@@ -120,11 +122,93 @@ Follow Recommendations: Adhere to your doctor's instructions, take prescribed me
         ],
       ),
       body: ListView.separated(
-        itemCount: _teAllergyModels.length,
+        itemCount: _teAllergyModels.length + 1,
         padding: EdgeInsets.all(16),
-        itemBuilder: (context, index) => TeAllergyCard(
-          teAllergyModel: _teAllergyModels[index],
-        ),
+        itemBuilder: (context, index) => index == _teAllergyModels.length
+            ? Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: TeColors.white,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      child: Text(
+                        'Links to medical sources:',
+                        style: TeText.header5.copyWith(color: TeColors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    IntrinsicHeight(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: double.infinity,
+                            width: 3,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(5),
+                              color: TeColors.yellow,
+                            ),
+                          ),
+                          SizedBox(
+                            width: 15,
+                          ),
+                          Flexible(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    launchUrl(
+                                        Uri.parse(
+                                            'https://www.ncbi.nlm.nih.gov/books/NBK447112/'),
+                                        mode: LaunchMode.externalApplication);
+                                  },
+                                  child: Text(
+                                    '• National Library of Medicine',
+                                    style: TeText.body2.copyWith(
+                                        color: TeColors.purple,
+                                        decoration: TextDecoration.underline),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 8,
+                                ),
+                                GestureDetector(
+                                  behavior: HitTestBehavior.opaque,
+                                  onTap: () {
+                                    launchUrl(
+                                        Uri.parse(
+                                            'https://waojournal.biomedcentral.com/articles/10.1097/WOX.0b013e318165b9c1'),
+                                        mode: LaunchMode.externalApplication);
+                                  },
+                                  child: Text(
+                                    '• Bio Medical Centre',
+                                    style: TeText.body2.copyWith(
+                                        color: TeColors.purple,
+                                        decoration: TextDecoration.underline),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : TeAllergyCard(
+                teAllergyModel: _teAllergyModels[index],
+              ),
         separatorBuilder: (context, index) => SizedBox(
           height: 16,
         ),
